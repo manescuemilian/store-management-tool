@@ -2,6 +2,8 @@ package com.api.storemanagement.product;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +12,6 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +30,20 @@ public class Product {
 	private int quantity;
 
 	@Column(nullable = false, updatable = false)
+	@CreationTimestamp
 	private LocalDateTime createdAt;
 
 	@Column(nullable = false)
+	@UpdateTimestamp
 	private LocalDateTime updatedAt;
 
-	@PrePersist
-	void createdAt() {
-		this.createdAt = this.updatedAt = LocalDateTime.now();
-	}
-
-	@PreUpdate
-	void updatedAt() {
-		this.updatedAt = LocalDateTime.now();
-	}
+//	@PrePersist
+//	void createdAt() {
+//		this.createdAt = this.updatedAt = LocalDateTime.now();
+//	}
+//
+//	@PreUpdate
+//	void updatedAt() {
+//		this.updatedAt = LocalDateTime.now();
+//	}
 }
