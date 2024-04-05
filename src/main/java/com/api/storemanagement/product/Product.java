@@ -3,6 +3,8 @@ package com.api.storemanagement.product;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "products")
 @Getter @Setter
@@ -26,4 +28,19 @@ public class Product {
 	@Column(nullable = false)
 	private int quantity;
 
+	@Column(nullable = false, updatable = false)
+	private LocalDateTime createdAt;
+
+	@Column(nullable = false)
+	private LocalDateTime updatedAt;
+
+	@PrePersist
+	void createdAt() {
+		this.createdAt = this.updatedAt = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	void updatedAt() {
+		this.updatedAt = LocalDateTime.now();
+	}
 }
