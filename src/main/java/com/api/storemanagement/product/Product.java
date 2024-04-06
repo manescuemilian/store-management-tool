@@ -52,4 +52,12 @@ public class Product {
 		this.setPrice(price);
 		this.setQuantity(quantity);
 	}
+
+	public Product(Long id, String name, String description, double price, int quantity) {
+		this.setId(id);
+		this.setName(name);
+		this.setDescription(description);
+		this.setPrice(price);
+		this.setQuantity(quantity);
+	}
 }

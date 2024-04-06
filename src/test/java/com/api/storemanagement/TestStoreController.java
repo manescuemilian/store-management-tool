@@ -11,15 +11,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -28,6 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(StoreController.class)
 @Import(ProductsSecurityConfig.class)
@@ -79,5 +73,38 @@ public class TestStoreController {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsString(product)))
 				.andExpect(status().isForbidden());
+	}
+
+	@Test
+	@WithMockUser(value = "admin", password = "admin", roles = "ADMIN")
+	public void testUpdateProductOk() throws Exception {
+		Long productIdToUpdate = 1L;
+		Product updatedProduct = new Product(productIdToUpdate, "test_product_new",
+								"New description", 15, 15);
+		mockMvc.perform(put("/products/admin/" + productIdToUpdate.toString())
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsString(updatedProduct)))
+				.andExpect(status().isOk())
+				.andExpect(content().string("Product updated successfully"));
+
+	}
+
+	@Test
+	@WithMockUser(value = "admin", password = "admin", roles = "ADMIN")
+	public void testRemoveProductOk() throws Exception {
+		Long productIdToRemove = 1L;
+		mockMvc.perform(delete("/products/admin/" + productIdToRemove.toString()))
+				.andExpect(status().isOk())
+				.andExpect(content().string("Product removed successfully"));
+
+	}
+
+	@Test
+	@WithMockUser(value = "user", password = "password", roles = "USER")
+	public void testRemoveProductForbidden() throws Exception {
+		Long productIdToRemove = 1L;
+		mockMvc.perform(delete("/products/admin/" + productIdToRemove.toString()))
+				.andExpect(status().isForbidden());
+
 	}
 }
