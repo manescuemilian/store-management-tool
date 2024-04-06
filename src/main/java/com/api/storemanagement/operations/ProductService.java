@@ -1,5 +1,6 @@
 package com.api.storemanagement.operations;
 
+import com.api.storemanagement.exceptions.PatchErrorException;
 import com.api.storemanagement.exceptions.ProductNotFoundException;
 import com.api.storemanagement.product.Product;
 import com.api.storemanagement.product.ProductRepository;
@@ -14,6 +15,9 @@ import java.util.List;
 public class ProductService {
 
 	private final ProductRepository productRepository;
+
+	@Autowired
+	ProductPatcher patcher;
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
@@ -51,10 +55,29 @@ public class ProductService {
 		return productRepository.save(existingProduct);
 	}
 
+	public Product patchProduct(Long productId, Product incompleteProduct) {
+		logger.info("Patching product with ID: {}", productId);
+
+		// Find product in the repository
+		Product existingProduct = productRepository.findById(productId)
+				.orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
+
+		// Perform patch
+		try {
+			patcher.internPatch(existingProduct, incompleteProduct);
+		} catch (IllegalAccessException e) {
+			throw new PatchErrorException("Failed to patch product with id: " + productId);
+		}
+
+		// Save the updated product
+		productRepository.save(existingProduct);
+		return existingProduct;
+	}
+
 	public void removeProduct(Long productId) {
 		logger.info("Removing product with ID: {}", productId);
 		if (!productRepository.existsById(productId)) {
-			logger.warn("Trying to delete a non-existent product with ID: {}\", productId)");
+			logger.warn("Trying to delete a non-existent product with ID: {}", productId);
 			throw new ProductNotFoundException("Product not found with id: " + productId);
 		}
 		productRepository.deleteById(productId);

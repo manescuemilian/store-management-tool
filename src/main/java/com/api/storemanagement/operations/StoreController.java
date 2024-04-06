@@ -2,7 +2,9 @@ package com.api.storemanagement.operations;
 
 import com.api.storemanagement.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +20,8 @@ public class StoreController {
 		this.productService = productService;
 	}
 
-	@PostMapping
+	@PostMapping("/add")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<String> addProduct(@RequestBody Product product) {
 		productService.addProduct(product);
 		return ResponseEntity.ok("Product added successfully");
@@ -31,12 +34,21 @@ public class StoreController {
 	}
 
 	@PutMapping("/{productId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<String> updateProduct(@PathVariable Long productId, @RequestBody Product updatedProduct) {
 		productService.updateProduct(productId, updatedProduct);
 		return ResponseEntity.ok("Product updated successfully");
 	}
 
+	@PatchMapping("/{productId}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Product> patchProduct(@PathVariable Long productId, @RequestBody Product incompleteProduct) {
+		Product updatedProduct = productService.patchProduct(productId, incompleteProduct);
+		return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+	}
+
 	@DeleteMapping("/{productId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<String> removeProduct(@PathVariable Long productId) {
 		productService.removeProduct(productId);
 		return ResponseEntity.ok("Product removed successfully");

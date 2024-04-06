@@ -25,6 +25,11 @@ public class StoreExceptionHandler {
 		return new ResponseEntity<>(bodyOfResponse, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(IllegalAccessException.class)
+	public ResponseEntity<?> handleIllegalAccessException(IllegalAccessException ex) {
+		return new ResponseEntity<>("Illegal access error", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
 		// Fallback for other uncaught exceptions

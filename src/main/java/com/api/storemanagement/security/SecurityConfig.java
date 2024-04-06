@@ -2,6 +2,8 @@ package com.api.storemanagement.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,6 +35,7 @@ public class SecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+		// Create one user and one admin account
 		UserDetails user = User.builder()
 				.username("user")
 				.password(passwordEncoder.encode("password"))
@@ -49,5 +52,15 @@ public class SecurityConfig {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	/**
+	 * Create a role hierarchy so that all admins can perform basic user operations
+	 */
+	static RoleHierarchy roleHierarchy() {
+		RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+		hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+		return hierarchy;
 	}
 }
