@@ -1,14 +1,11 @@
 package com.api.storemanagement.exceptions;
 
-import com.api.storemanagement.product.Product;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-
-import java.util.NoSuchElementException;
 
 /**
  * Handler of exceptions thrown during the use of the REST controller

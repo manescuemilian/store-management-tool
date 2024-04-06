@@ -126,4 +126,16 @@ public class ProductService {
 		logger.debug("Listing all products.");
 		return productRepository.findAll();
 	}
+
+	/**
+	 * Return list of products priced above a specified threshold and with a stock quantity below a defined limit
+	 * @param minPrice - minimum price to look for
+	 * @param maxQuantity - maximum quantity
+	 * @return list of products respecting the condition
+	 */
+	public List<Product> findExpensiveLowStockProducts(double minPrice, int maxQuantity) {
+		logger.debug("Looking for products with price higher than " + minPrice +
+				"and in lower quantity than " + maxQuantity);
+		return productRepository.findExpensiveLowStockProducts(minPrice, maxQuantity);
+	}
 }

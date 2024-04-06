@@ -62,4 +62,15 @@ public class StoreController {
 		List<Product> products = productService.listAllProducts();
 		return ResponseEntity.ok(products);
 	}
+
+	@GetMapping("/public/expensive-low-stock")
+	public ResponseEntity<List<Product>> getExpensiveLowStockProducts(
+			@RequestParam("minPrice") double minPrice,
+			@RequestParam("maxQuantity") int maxQuantity) {
+		List<Product> products = productService.findExpensiveLowStockProducts(minPrice, maxQuantity);
+		if (products.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(products);
+	}
 }

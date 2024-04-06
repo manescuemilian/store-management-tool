@@ -99,8 +99,8 @@ public class TestStoreController {
 	@Test
 	@WithMockUser(value = "admin", password = "admin", roles = "ADMIN")
 	public void testRemoveProductOk() throws Exception {
-		Long productIdToRemove = 1L;
-		mockMvc.perform(delete("/products/admin/" + productIdToRemove.toString()))
+		long productIdToRemove = 1L;
+		mockMvc.perform(delete("/products/admin/" + productIdToRemove))
 				.andExpect(status().isOk())
 				.andExpect(content().string("Product removed successfully"));
 		Mockito.verify(this.service, Mockito.times(1))
@@ -110,10 +110,34 @@ public class TestStoreController {
 	@Test
 	@WithMockUser(value = "user", password = "password", roles = "USER")
 	public void testRemoveProductForbidden() throws Exception {
-		Long productIdToRemove = 1L;
-		mockMvc.perform(delete("/products/admin/" + productIdToRemove.toString()))
+		long productIdToRemove = 1L;
+		mockMvc.perform(delete("/products/admin/" + productIdToRemove))
 				.andExpect(status().isForbidden());
 		Mockito.verify(this.service, Mockito.times(0))
 				.removeProduct(Mockito.any(Long.class));
+	}
+
+	@Test
+	@WithMockUser(value = "user", password = "password", roles = "USER")
+	public void testGetExpensiveLowStock() throws Exception {
+		double minPrice = 20.0;
+		int maxQuantity = 10;
+		Product mockProduct = new Product(1L, "Expensive Product", "High-quality item", 25.0, 5);
+		List<Product> mockProducts = Arrays.asList(mockProduct);
+
+		Mockito.when(service.findExpensiveLowStockProducts(minPrice, maxQuantity))
+				.thenReturn(mockProducts);
+
+		mockMvc.perform(get("/products/public/expensive-low-stock")
+						.param("minPrice", String.valueOf(minPrice))
+						.param("maxQuantity", String.valueOf(maxQuantity)))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$[0].name", Matchers.is("Expensive Product")))
+				.andExpect(jsonPath("$[0].description", Matchers.is("High-quality item")))
+				.andExpect(jsonPath("$[0].price", Matchers.is(25.0)))
+				.andExpect(jsonPath("$[0].quantity", Matchers.is(5)));
+		Mockito.verify(this.service, Mockito.times(1))
+				.findExpensiveLowStockProducts(Mockito.any(Double.class), Mockito.any(Integer.class));
 	}
 }
