@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 
+/**
+ * Component responsible for patching fields of a product
+ */
 @Component
 public class ProductPatcher {
 	private static final Logger logger = LoggerFactory.getLogger(ProductPatcher.class);

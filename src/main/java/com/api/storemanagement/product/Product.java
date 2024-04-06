@@ -7,6 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+/**
+ * Product entity
+ */
 @Entity
 @Table(name = "products")
 @Getter @Setter
@@ -17,7 +20,7 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String name;
 
 	@Column(length = 1000)
@@ -36,14 +39,4 @@ public class Product {
 	@Column(nullable = false)
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
-
-//	@PrePersist
-//	void createdAt() {
-//		this.createdAt = this.updatedAt = LocalDateTime.now();
-//	}
-//
-//	@PreUpdate
-//	void updatedAt() {
-//		this.updatedAt = LocalDateTime.now();
-//	}
 }

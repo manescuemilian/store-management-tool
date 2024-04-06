@@ -10,6 +10,9 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Handler of exceptions thrown during the use of the REST controller
+ */
 @ControllerAdvice
 public class StoreExceptionHandler {
 	@ExceptionHandler(ProductNotFoundException.class)

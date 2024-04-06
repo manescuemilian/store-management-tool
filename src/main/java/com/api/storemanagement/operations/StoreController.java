@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for the store management tool
+ */
 @RestController
 @RequestMapping("/api/products")
 public class StoreController {
@@ -23,8 +26,8 @@ public class StoreController {
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<String> addProduct(@RequestBody Product product) {
-		productService.addProduct(product);
-		return ResponseEntity.ok("Product added successfully");
+		Product addedProduct = productService.addProduct(product);
+		return ResponseEntity.ok("Product " + addedProduct.getName() + " added successfully, having ID: " + addedProduct.getId());
 	}
 
 	@GetMapping("/{productId}")

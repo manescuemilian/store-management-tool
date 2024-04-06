@@ -15,10 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Security configuration
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
 	@Bean
 	public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
 		return http
