@@ -20,15 +20,16 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class ProductsSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
 		return http
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> {
 					auth.requestMatchers("/login").permitAll();
-					auth.requestMatchers("/api/products/**").hasRole("USER");
-					auth.requestMatchers("/admin").hasRole("Admin");
+					auth.requestMatchers("/products/admin/**").hasRole("ADMIN");
+					auth.requestMatchers("/products/public/**").hasRole("USER");
+					auth.requestMatchers("/admin").hasRole("ADMIN");
 				})
 				.formLogin(Customizer.withDefaults())
 				.httpBasic(Customizer.withDefaults())

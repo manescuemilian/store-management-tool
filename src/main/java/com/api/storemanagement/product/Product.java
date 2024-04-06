@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "products")
 @Getter @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +39,17 @@ public class Product {
 	@Column(nullable = false)
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
+
+	public Product(Long id, String name, double price, int quantity) {
+		this.setId(id);
+		this.setName(name);
+		this.setPrice(price);
+		this.setQuantity(quantity);
+	}
+
+	public Product(String name, double price, int quantity) {
+		this.setName(name);
+		this.setPrice(price);
+		this.setQuantity(quantity);
+	}
 }
