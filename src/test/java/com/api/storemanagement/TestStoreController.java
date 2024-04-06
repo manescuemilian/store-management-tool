@@ -50,7 +50,9 @@ public class TestStoreController {
 				.andExpect(jsonPath("$[0].name", Matchers.is("test_product")))
 				.andExpect(jsonPath("$[0].price", Matchers.is(10.0)))
 				.andExpect(jsonPath("$[0].quantity", Matchers.is(10)))
-				.andExpect(jsonPath("$[0].id", Matchers.is(1)));
+				.andExpect(jsonPath("$[0].id", Matchers.is(1)))
+				.andExpect(jsonPath("$").isArray());
+		Mockito.verify(this.service, Mockito.times(1)).listAllProducts();
 	}
 
 	@Test
@@ -62,6 +64,8 @@ public class TestStoreController {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(product)))
 				.andExpect(status().isOk());
+		Mockito.verify(this.service, Mockito.times(1))
+				.addProduct(Mockito.any(Product.class));
 	}
 
 	@Test
@@ -73,6 +77,8 @@ public class TestStoreController {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(mapper.writeValueAsString(product)))
 				.andExpect(status().isForbidden());
+		Mockito.verify(this.service, Mockito.times(0))
+				.addProduct(Mockito.any(Product.class));
 	}
 
 	@Test
@@ -86,7 +92,8 @@ public class TestStoreController {
 						.content(mapper.writeValueAsString(updatedProduct)))
 				.andExpect(status().isOk())
 				.andExpect(content().string("Product updated successfully"));
-
+		Mockito.verify(this.service, Mockito.times(1))
+				.updateProduct(Mockito.any(Long.class), Mockito.any(Product.class));
 	}
 
 	@Test
@@ -96,7 +103,8 @@ public class TestStoreController {
 		mockMvc.perform(delete("/products/admin/" + productIdToRemove.toString()))
 				.andExpect(status().isOk())
 				.andExpect(content().string("Product removed successfully"));
-
+		Mockito.verify(this.service, Mockito.times(1))
+				.removeProduct(Mockito.any(Long.class));
 	}
 
 	@Test
@@ -105,6 +113,7 @@ public class TestStoreController {
 		Long productIdToRemove = 1L;
 		mockMvc.perform(delete("/products/admin/" + productIdToRemove.toString()))
 				.andExpect(status().isForbidden());
-
+		Mockito.verify(this.service, Mockito.times(0))
+				.removeProduct(Mockito.any(Long.class));
 	}
 }
