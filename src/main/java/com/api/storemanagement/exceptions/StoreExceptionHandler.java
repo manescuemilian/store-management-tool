@@ -18,6 +18,12 @@ public class StoreExceptionHandler {
 		return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler(InsufficientQuantityException.class)
+	public ResponseEntity<?> handleInsufficientQuantityException(InsufficientQuantityException ex, WebRequest request) {
+		String bodyOfResponse = ex.getMessage();
+		return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+	}
+
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
 		// Handle cases where data integrity is violated (e.g., null constraints, duplicate keys)

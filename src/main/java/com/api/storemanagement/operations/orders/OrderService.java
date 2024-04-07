@@ -1,5 +1,6 @@
 package com.api.storemanagement.operations.orders;
 
+import com.api.storemanagement.exceptions.InsufficientQuantityException;
 import com.api.storemanagement.exceptions.ProductNotFoundException;
 import com.api.storemanagement.operations.products.ProductService;
 import com.api.storemanagement.orders.Order;
@@ -72,6 +73,11 @@ public class OrderService {
 
 			OrderItem orderItem = new OrderItem();
 			orderItem.setProduct(product);
+
+			if (item.quantity() > product.getQuantity()) {
+				throw new InsufficientQuantityException("Cannot place order for product " + item.productId() + ". Quantity available is " + product.getQuantity() + ".");
+			}
+
 			orderItem.setQuantity(item.quantity());
 			orderItem.setOrder(order);
 			orderItems.add(orderItem); // Add item to the list
