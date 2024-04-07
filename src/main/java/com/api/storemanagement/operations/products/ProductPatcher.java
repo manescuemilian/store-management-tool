@@ -1,4 +1,4 @@
-package com.api.storemanagement.operations;
+package com.api.storemanagement.operations.products;
 
 import com.api.storemanagement.product.Product;
 import org.slf4j.Logger;

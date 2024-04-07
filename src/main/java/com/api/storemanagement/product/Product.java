@@ -1,7 +1,10 @@
 package com.api.storemanagement.product;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,7 +14,7 @@ import java.time.LocalDateTime;
  * Product entity
  */
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 @Getter @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor

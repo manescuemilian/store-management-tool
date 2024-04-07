@@ -1,4 +1,4 @@
-package com.api.storemanagement.operations;
+package com.api.storemanagement.operations.products;
 
 import com.api.storemanagement.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/products")
-public class StoreController {
+public class ProductController {
 
 	private final ProductService productService;
 
 	@Autowired
-	public StoreController(ProductService productService) {
+	public ProductController(ProductService productService) {
 		this.productService = productService;
 	}
 

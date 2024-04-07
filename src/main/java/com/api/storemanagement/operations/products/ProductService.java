@@ -1,4 +1,4 @@
-package com.api.storemanagement.operations;
+package com.api.storemanagement.operations.products;
 
 import com.api.storemanagement.exceptions.PatchErrorException;
 import com.api.storemanagement.exceptions.ProductNotFoundException;
@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class ProductService {
 	 * @param product - product to add
 	 * @return Added product
 	 */
+	@Transactional
 	public Product addProduct(Product product) {
 		logger.info("Adding a new product: {}.", product.getName());
 
@@ -55,6 +57,7 @@ public class ProductService {
 	 * @param productId - ID of product
 	 * @return product having the provided ID
 	 */
+	@Transactional(readOnly = true)
 	public Product findProduct(Long productId) {
 		logger.info("Retrieving product with ID: {}", productId);
 		return productRepository.findById(productId)
@@ -67,6 +70,7 @@ public class ProductService {
 	 * @param updatedProduct - new definition of product
 	 * @return updated product definition
 	 */
+	@Transactional
 	public Product updateProduct(Long productId, Product updatedProduct) {
 		logger.info("Updating product with ID: {}", productId);
 		Product existingProduct = productRepository.findById(productId)
@@ -86,6 +90,7 @@ public class ProductService {
 	 * @param incompleteProduct - fields to update in the product
 	 * @return new definition of product
 	 */
+	@Transactional
 	public Product patchProduct(Long productId, Product incompleteProduct) {
 		logger.info("Patching product with ID: {}", productId);
 
@@ -109,6 +114,7 @@ public class ProductService {
 	 * Remove a product from the repository
 	 * @param productId - ID of product to be removed
 	 */
+	@Transactional
 	public void removeProduct(Long productId) {
 		logger.info("Removing product with ID: {}", productId);
 		if (!productRepository.existsById(productId)) {
@@ -122,6 +128,7 @@ public class ProductService {
 	 * List all products
 	 * @return list containing all products in the repository
 	 */
+	@Transactional(readOnly = true)
 	public List<Product> listAllProducts() {
 		logger.debug("Listing all products.");
 		return productRepository.findAll();
@@ -133,6 +140,7 @@ public class ProductService {
 	 * @param maxQuantity - maximum quantity
 	 * @return list of products respecting the condition
 	 */
+	@Transactional(readOnly = true)
 	public List<Product> findExpensiveLowStockProducts(double minPrice, int maxQuantity) {
 		logger.debug("Looking for products with price higher than " + minPrice +
 				"and in lower quantity than " + maxQuantity);

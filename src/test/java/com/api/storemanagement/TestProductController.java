@@ -1,9 +1,9 @@
 package com.api.storemanagement;
 
-import com.api.storemanagement.operations.ProductService;
-import com.api.storemanagement.operations.StoreController;
+import com.api.storemanagement.operations.products.ProductService;
+import com.api.storemanagement.operations.products.ProductController;
 import com.api.storemanagement.product.Product;
-import com.api.storemanagement.security.ProductsSecurityConfig;
+import com.api.storemanagement.security.StoreSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -23,10 +23,10 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(StoreController.class)
-@Import(ProductsSecurityConfig.class)
+@WebMvcTest(ProductController.class)
+@Import(StoreSecurityConfig.class)
 @ContextConfiguration
-public class TestStoreController {
+public class TestProductController {
 	@Autowired
 	private MockMvc mockMvc;
 

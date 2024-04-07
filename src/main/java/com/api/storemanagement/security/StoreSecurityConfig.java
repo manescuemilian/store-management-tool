@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
-public class ProductsSecurityConfig {
+public class StoreSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
 		return http
@@ -30,6 +30,8 @@ public class ProductsSecurityConfig {
 					auth.requestMatchers("/products/admin/**").hasRole("ADMIN");
 					auth.requestMatchers("/products/public/**").hasRole("USER");
 					auth.requestMatchers("/admin").hasRole("ADMIN");
+					auth.requestMatchers("/orders/**").hasRole("USER");
+					auth.requestMatchers("/orders/admin/**").hasRole("ADMIN");
 				})
 				.formLogin(Customizer.withDefaults())
 				.httpBasic(Customizer.withDefaults())
@@ -38,18 +40,26 @@ public class ProductsSecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-		// Create one user and one admin account
+		// Create two users and one admin account
 		UserDetails user = User.builder()
 				.username("user")
 				.password(passwordEncoder.encode("password"))
 				.roles("USER")
 				.build();
+
+		UserDetails user2 = User.builder()
+				.username("user2")
+				.password(passwordEncoder.encode("password"))
+				.roles("USER")
+				.build();
+
 		UserDetails admin = User.builder()
 				.username("admin")
 				.password(passwordEncoder.encode("admin"))
 				.roles("ADMIN")
 				.build();
-		return new InMemoryUserDetailsManager(user, admin);
+
+		return new InMemoryUserDetailsManager(user, user2, admin);
 	}
 
 	@Bean
