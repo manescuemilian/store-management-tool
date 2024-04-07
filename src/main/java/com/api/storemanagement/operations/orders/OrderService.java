@@ -16,8 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service that does operations on an order repository
+ */
 @Service
 public class OrderService {
+	/**
+	 * Repositories for products and orders
+	 */
 	private final OrderRepository orderRepository;
 	private final ProductRepository productRepository;
 
@@ -26,6 +32,11 @@ public class OrderService {
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
+	/**
+	 * Constructor
+	 * @param orderRepository
+	 * @param productRepository
+	 */
 	@Autowired
 	public OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
 		this.orderRepository = orderRepository;
@@ -33,11 +44,23 @@ public class OrderService {
 		logger.info("OrderService initialized");
 	}
 
+	/**
+	 * Find orders for a given username
+	 * @param username - user for which to retrieve orders
+	 * @return list of orders for the user
+	 */
 	@Transactional(readOnly = true)
 	public List<Order> findOrdersByUsername(String username) {
+		logger.info("Retrieving orders for user: {}", username);
 		return orderRepository.findByUsername(username);
 	}
 
+	/**
+	 * Create an order for a given user
+	 * @param username
+	 * @param items - list of items in the order
+	 * @return created order
+	 */
 	@Transactional
 	public Order createOrder(String username, List<OrderItemRequest> items) {
 		Order order = new Order();
@@ -58,19 +81,34 @@ public class OrderService {
 		return orderRepository.save(order);
 	}
 
+	/**
+	 * Find an order by its id
+	 * @param orderId - order ID
+	 * @return retrieved order
+	 */
 	@Transactional(readOnly = true)
 	public Order findOrderById(Long orderId) {
+		logger.info("Retrieving order with ID: {}", orderId);
 		return orderRepository.findById(orderId)
 				.orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
 	}
 
+	/**
+	 * Delete a given order
+	 * @param orderId - order ID
+	 */
 	@Transactional
 	public void deleteOrderById(Long orderId) {
+		logger.info("Deleting order with ID: {}", orderId);
 		orderRepository.deleteById(orderId);
 	}
 
+	/**
+	 * Warning - delete all orders! Only for admins
+	 */
 	@Transactional
 	public void deleteAll() {
+		logger.warn("Deleting all orders!");
 		orderRepository.deleteAll();
 	}
 }

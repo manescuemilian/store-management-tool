@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Service that does operations on a repository
+ * Service that does operations on a product repository
  */
 @Service
 public class ProductService {
